@@ -1,45 +1,63 @@
 # Project: Downwards
 # Makefile created by Dev-C++ 4.9.9.2
 
-CPP  = g++.exe
-CC   = gcc.exe
+CPP  = g++.exe -D__DEBUG__
+CC   = gcc.exe -D__DEBUG__
 WINDRES = windres.exe
-RES  = Downwards_private.res
-OBJ  = letter.o functions.o globals.o main.o timer.o $(RES)
-LINKOBJ  = letter.o functions.o globals.o main.o timer.o $(RES)
-LIBS =  -L"C:/Dev-Cpp/lib" -L"C:/Dev-Cpp/SDL-1.2.13/lib" -lmingw32 -lSDLmain -lSDL -lSDL_image  
+RES  = tmp/Downwards_private.res
+OBJ  = tmp/corpus.o tmp/main.o tmp/graphics.o tmp/game.o tmp/event.o tmp/entity.o tmp/animation.o tmp/FPS.o tmp/letter.o tmp/letterspace.o tmp/letter2.o $(RES)
+LINKOBJ  = tmp/corpus.o tmp/main.o tmp/graphics.o tmp/game.o tmp/event.o tmp/entity.o tmp/animation.o tmp/FPS.o tmp/letter.o tmp/letterspace.o tmp/letter2.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" -L"C:/Dev-Cpp/SDL-1.2.13/lib" -mwindows -lmingw32 -lSDLmain -lSDL -lSDL_image  -g3 
 INCS =  -I"C:/Dev-Cpp/include" 
 CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include"  -I"C:/Dev-Cpp/SDL-1.2.13/include" 
-BIN  = Downwards.exe
-CXXFLAGS = $(CXXINCS)  
-CFLAGS = $(INCS)  
+BIN  = bin/Downwards.exe
+CXXFLAGS = $(CXXINCS)   -g3
+CFLAGS = $(INCS)   -g3
 RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom
 
-all: all-before Downwards.exe all-after
+all: all-before bin/Downwards.exe all-after
 
 
 clean: clean-custom
 	${RM} $(OBJ) $(BIN)
 
 $(BIN): $(OBJ)
-	$(CPP) $(LINKOBJ) -o "Downwards.exe" $(LIBS)
+	$(CPP) $(LINKOBJ) -o "bin\Downwards.exe" $(LIBS)
 
-letter.o: letter.cpp
-	$(CPP) -c letter.cpp -o letter.o $(CXXFLAGS)
+tmp/corpus.o: src/corpus.cpp
+	$(CPP) -c src/corpus.cpp -o tmp/corpus.o $(CXXFLAGS)
 
-functions.o: functions.cpp
-	$(CPP) -c functions.cpp -o functions.o $(CXXFLAGS)
+tmp/main.o: src/main.cpp
+	$(CPP) -c src/main.cpp -o tmp/main.o $(CXXFLAGS)
 
-globals.o: globals.cpp
-	$(CPP) -c globals.cpp -o globals.o $(CXXFLAGS)
+tmp/graphics.o: src/graphics.cpp
+	$(CPP) -c src/graphics.cpp -o tmp/graphics.o $(CXXFLAGS)
 
-main.o: main.cpp
-	$(CPP) -c main.cpp -o main.o $(CXXFLAGS)
+tmp/game.o: src/game.cpp
+	$(CPP) -c src/game.cpp -o tmp/game.o $(CXXFLAGS)
 
-timer.o: timer.cpp
-	$(CPP) -c timer.cpp -o timer.o $(CXXFLAGS)
+tmp/event.o: src/event.cpp
+	$(CPP) -c src/event.cpp -o tmp/event.o $(CXXFLAGS)
 
-Downwards_private.res: Downwards_private.rc 
-	$(WINDRES) -i Downwards_private.rc --input-format=rc -o Downwards_private.res -O coff 
+tmp/entity.o: src/entity.cpp
+	$(CPP) -c src/entity.cpp -o tmp/entity.o $(CXXFLAGS)
+
+tmp/animation.o: src/animation.cpp
+	$(CPP) -c src/animation.cpp -o tmp/animation.o $(CXXFLAGS)
+
+tmp/FPS.o: src/FPS.cpp
+	$(CPP) -c src/FPS.cpp -o tmp/FPS.o $(CXXFLAGS)
+
+tmp/letter.o: src/letter.cpp
+	$(CPP) -c src/letter.cpp -o tmp/letter.o $(CXXFLAGS)
+
+tmp/letterspace.o: src/letterspace.cpp
+	$(CPP) -c src/letterspace.cpp -o tmp/letterspace.o $(CXXFLAGS)
+
+tmp/letter2.o: src/letter2.cpp
+	$(CPP) -c src/letter2.cpp -o tmp/letter2.o $(CXXFLAGS)
+
+tmp/Downwards_private.res: Downwards_private.rc 
+	$(WINDRES) -i Downwards_private.rc --input-format=rc -o tmp/Downwards_private.res -O coff 

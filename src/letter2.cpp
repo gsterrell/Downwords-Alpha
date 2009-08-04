@@ -5,24 +5,61 @@
 //The headers
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
-#include <string>
 #include "constants.h"
 #include "letter.h"
-#include "functions.h"
-#include "globals.h"
-#include "level.h"
+//#include "globals.h"
+/*#include "graphics.h"
+#include <cstdlib>
+#include <ctime>
+#include "letter2.h"
+
+//The attributes of the letter
+SDL_Rect letterBox;
+
+//Setting the up the sprites
+void Letter::set_letters()
+{
+    for ( int h = 0; h < 13; h++)
+    {
+        letters[h].x = (h * 40);
+    }
+    for ( int i = 13; i < 26; i++)
+    {
+        letters[i].x = ((i - 13) * 40);
+    }
+    for ( int j = 0; j < 13; j++)
+    {
+        letters[j].y = 0;
+    }
+    for ( int k = 13; k < 26; k++)
+    {
+        letters[k].y = 40;
+    }
+    for ( int l = 0; l < 26; l++)
+    {
+        letters[l].w = 40;
+        letters[l].h = 40;
+    }
+}
 
 Letter::Letter()
 {
     //Set the button's attributes
-    box.x = 0;
-    box.y = 0;
-    box.w = LETTER_WIDTH;
-    box.h = LETTER_HEIGHT;
+    letterBox.x = 0;
+    letterBox.y = 0;
+    letterBox.w = LETTER_WIDTH;
+    letterBox.h = LETTER_HEIGHT;
     
-    //default sprite for testing
-    letter = &letters[LETTER_A];
+    unsigned seed = time(0);
     
+    srand(seed);
+    
+    randomLetter = 0 + rand() % 25;
+    
+    letter = &letters[randomLetter];
+    
+    //letter = &letters[B];
+        
     //Initialize the velocity
     xVel = 0;
     yVel = 2;
@@ -30,7 +67,6 @@ Letter::Letter()
 
 void Letter::handle_input()
 {
-    
     //The mouse offsets 
     int x = 0, y = 0; 
     
@@ -42,19 +78,19 @@ void Letter::handle_input()
         
         if (clicked == true)
         { 
-            box.x = x;
-            box.y = y;
+            letterBox.x = x;
+            letterBox.y = y;
             yVel = 0;
             
             if (event.motion.x > (SCREEN_WIDTH - LETTER_WIDTH))
             {
                 //move back
-                box.x = SCREEN_WIDTH - LETTER_WIDTH;        
+                letterBox.x = SCREEN_WIDTH - LETTER_WIDTH;        
             }
             if (event.motion.y > (SCREEN_HEIGHT - LETTER_HEIGHT))
             {
                 //move back
-                box.y = SCREEN_HEIGHT - LETTER_HEIGHT;  
+                letterBox.y = SCREEN_HEIGHT - LETTER_HEIGHT;  
             }
         }
     }
@@ -70,7 +106,7 @@ void Letter::handle_input()
             y = event.button.y; 
             
             //If the mouse is over the button 
-            if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ) ) 
+            if( ( x > letterBox.x ) && ( x < letterBox.x + letterBox.w ) && ( y > letterBox.y ) && ( y < letterBox.y + letterBox.h ) ) 
             {   
                 clicked = true;
             } 
@@ -90,8 +126,28 @@ void Letter::handle_input()
             clicked = false;
             yVel = 2;
         }
-    } 
+        
+        //If the mouse is over the button 
+        if( ( letterBox.x > letterspaceBox.x ) && ( letterBox.x < letterspaceBox.x + letterspaceBox.w ) && ( letterBox.y > letterspaceBox.y ) && ( letterBox.y < letterspaceBox.y + letterspaceBox.h ) ) 
+        {   
+            letterBox.x = (letterspaceBox.x - 10);
+            letterBox.y = (letterspaceBox.y - 10);
+            yVel = 0;
+        }
+        //If the letter is over a letterspace, cover the letterspace.
+        //This will handled by the "Sprite" class in the near future.
+        if( ( letterBox.x < letterspaceBox.x ) && ( letterBox.x + letterBox.w > letterspaceBox.x ) && ( letterBox.y < letterspaceBox.y ) && ( letterBox.y + letterBox.h > letterspaceBox.y ))
+        {   
+            //Cover the letterspace with the letter
+            letterBox.x = (letterspaceBox.x - 10);
+            letterBox.y = (letterspaceBox.y - 10);
+            yVel = 0;
+        }
+    }
     
+    //This will be replaced later when letterspace & letter classes are 
+    //as we wish.
+    /*
     //If a key was pressed
     if( event.type == SDL_KEYDOWN )
     {
@@ -121,34 +177,46 @@ void Letter::handle_input()
 void Letter::move()
 {
     //Move the letter left or right
-    box.x += xVel;
+    letterBox.x += xVel;
     
     //If the letter went too far to the left or right
-    if( ( box.x < 0 ) || ( box.x + LETTER_WIDTH > SCREEN_WIDTH ) )
+    if( ( letterBox.x < 0 ) || ( letterBox.x + LETTER_WIDTH > SCREEN_WIDTH ) )
     {
         //move back
-        box.x -= xVel;    
+        letterBox.x -= xVel;    
     }
     
     //Move the letter up or down
-    box.y += yVel;
+    letterBox.y += yVel;
     
     //If the letter went too far up or down
-    if( ( box.y < 0 ) || ( box.y + LETTER_HEIGHT > SCREEN_HEIGHT ) )
+    if( ( letterBox.y < 0 ) || ( letterBox.y + LETTER_HEIGHT > SCREEN_HEIGHT ) )
     {
         //move back
-        box.y -= yVel;  
+        letterBox.y -= yVel;  
     }
 }
 
-void Letter::show()
+bool Letter::init(char *imageFile)
 {
+    filename = imageFile;
+        
+    //If there was a problem in loading the letter
+    if( letterSheet == NULL )
+    {
+        return false;    
+    }
+    return true;
+}
+
+//Shows the letter
+void Letter::show()
+{  
     //Show the letter
-    apply_surface( box.x, box.y, letterSheet, screen, NULL);
+    Graphics::Draw(screen, letterSheet, letterBox.x, letterBox.y, &letters[randomLetter]);
 }
 
 //Destructor.  Currently not being used.
 Letter::~Letter()
-{
-    SDL_FreeSurface(letterSheet);
-}
+{}
+*/
